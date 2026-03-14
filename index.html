@@ -7,41 +7,51 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7b2cbf">
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f9; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 50px; background-color: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: inline-block; max-width: 90%; }
+        h2 { color: #333; margin-bottom: 10px; }
+        p { color: #666; font-size: 1.1em; }
         #btnInstalar { 
             display: none; background-color: #7b2cbf; color: white; 
-            border: none; padding: 15px 30px; font-size: 16px; 
-            border-radius: 8px; cursor: pointer; margin-top: 20px;
+            border: none; padding: 15px 40px; font-size: 18px; font-weight: bold;
+            border-radius: 50px; cursor: pointer; margin-top: 25px;
+            box-shadow: 0 4px 15px rgba(123, 44, 191, 0.3);
+            transition: transform 0.2s;
         }
+        #btnInstalar:active { transform: scale(0.95); }
+        .instrucciones { font-size: 0.9em; color: #999; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h2>GCJ App</h2>
-        <p id="statusText">Verificando aplicación...</p>
-        <button id="btnInstalar">Instalar Aplicación</button>
+        <p id="statusText">Detectando sistema...</p>
+        <button id="btnInstalar">INSTALAR AHORA</button>
+        <div id="guiaManual" class="instrucciones">
+            Si no ves el botón, toca los tres puntos del navegador y selecciona <b>"Instalar aplicación"</b> o <b>"Agregar a la pantalla principal"</b>.
+        </div>
     </div>
 
     <script>
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec";
 
-        // 1. SI YA ESTÁ INSTALADA: Redirigir al script
-        if (window.matchMedia('(display-mode: standalone)').matches) {
+        // 1. SI YA ESTÁ INSTALADA O ES PC EN MODO APP: Redirigir
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
             window.location.href = URL_SCRIPT;
         }
 
-        // 2. LÓGICA DE INSTALACIÓN
         let eventoInstalacion;
         const btn = document.getElementById('btnInstalar');
         const status = document.getElementById('statusText');
+        const guia = document.getElementById('guiaManual');
 
+        // 2. ESCUCHAR EL EVENTO DE INSTALACIÓN
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             eventoInstalacion = e;
-            btn.style.display = 'block';
-            status.innerText = "Haz clic abajo para instalar la app en tu inicio.";
+            btn.style.display = 'inline-block';
+            status.innerText = "¡Listo para instalar!";
         });
 
         btn.addEventListener('click', async () => {
@@ -50,15 +60,25 @@
                 const { outcome } = await eventoInstalacion.userChoice;
                 if (outcome === 'accepted') {
                     btn.style.display = 'none';
+                    status.innerText = "Instalando...";
                 }
             }
         });
 
-        // 3. REGISTRAR SERVICE WORKER (Obligatorio para que sea PWA)
+        // 3. REGISTRAR EL SERVICE WORKER
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-            .catch(err => console.log("Fallo registro SW", err));
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log("Service Worker registrado.");
+                // Si en 3 segundos no sale el botón, mostrar guía manual
+                setTimeout(() => {
+                    if (btn.style.display === 'none') {
+                        status.innerText = "Instalación disponible en el menú del navegador";
+                        guia.style.display = 'block';
+                    }
+                }, 3000);
+            });
         }
     </script>
 </body>
 </html>
+ 
