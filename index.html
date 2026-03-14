@@ -2,63 +2,46 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GCJ App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Instalar GCJ App</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://drive.google.com/uc?export=view&id=1P5zX6_4BuPD9fvKXjFjwQvux0PIuSZfV">
-
+    <meta name="theme-color" content="#7b2cbf">
     <style>
-        body, html { margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden; font-family: sans-serif; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        #btnInstalar {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #7b2cbf;
-            color: white;
-            padding: 18px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            display: none; /* Se activa por JS */
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-            border: none;
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
+        #installBtn { 
+            padding: 20px 30px; 
+            font-size: 20px; 
+            background-color: #7b2cbf; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
             cursor: pointer;
+            display: none; /* Se muestra solo si es instalable */
         }
     </style>
 </head>
 <body>
-
-    <iframe src="https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec"></iframe>
-
-    <button id="btnInstalar">Instalar GCJ App</button>
+    <h2>GCJ App</h2>
+    <p>Presiona el botón para instalar el sistema en tu inicio.</p>
+    
+    <button id="installBtn">Instalar App</button>
 
     <script>
-        let eventoInstalacion;
-        const boton = document.getElementById('btnInstalar');
-
-        // Registrar Service Worker
+        // Registrar el Service Worker (Sin esto no hay botón)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
 
-        // Detectar si la app se puede instalar
+        let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
-            eventoInstalacion = e;
-            boton.style.display = 'block';
+            deferredPrompt = e;
+            document.getElementById('installBtn').style.display = 'inline-block';
         });
 
-        boton.addEventListener('click', () => {
-            if (eventoInstalacion) {
-                eventoInstalacion.prompt();
-                eventoInstalacion.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        boton.style.display = 'none';
-                    }
-                });
+        document.getElementById('installBtn').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
             }
         });
     </script>
