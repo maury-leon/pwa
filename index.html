@@ -1,64 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GCJ App</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icon-192.png">
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
-        #installBanner { 
-            position: fixed; bottom: 0; width: 100%; background: #7b2cbf; 
-            color: white; padding: 20px; text-align: center; display: none; 
-        }
-    </style>
-</head>
-<body>
 
-    <iframe src="https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec"></iframe>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <div id="installBanner">
-        <p>¿Quieres acceso rápido? Instala la App de la Iglesia</p>
-        <button id="installBtn" style="padding: 10px 20px;">Instalar Ahora</button>
-    </div>
+<title>GCJ App</title>
 
-    <script>
-        // Registro del Service Worker (Necesario para PWA)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+<link rel="manifest" href="manifest.json">
 
-let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
+<meta name="theme-color" content="#7b2cbf">
 
-installBtn.style.display = "none";
+<script>
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = "inline-block";
-});
+if (window.matchMedia('(display-mode: standalone)').matches) {
 
-installBtn.addEventListener("click", async () => {
+window.location.href =
+"https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec";
 
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-
-  const { outcome } = await deferredPrompt.userChoice;
-
-  if (outcome === "accepted") {
-    console.log("App instalada");
-  } else {
-    console.log("Instalación cancelada");
-  }
-
-  deferredPrompt = null;
-
-});
+}
 
 </script>
+
+</head>
+
+<body style="font-family:sans-serif;text-align:center;padding:40px;">
+
+<h2>GCJ App</h2>
+
+<p>Instala esta aplicación para acceder rápidamente.</p>
+
 </body>
 </html>
