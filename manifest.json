@@ -1,7 +1,7 @@
 {
 "name": "Mi App",
 "short_name": "MiApp",
-"start_url": "https://script.google.com/macros/s/TU_SCRIPT_ID/exec",
+"start_url": "https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec",
 "display": "standalone",
 "background_color": "#ffffff",
 "theme_color": "#2d7ff9",
