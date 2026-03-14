@@ -1,8 +1,13 @@
-const CACHE_NAME = 'gcj-v1';
-self.addEventListener('install', (e) => {
-    console.log('SW instalado');
-    self.skipWaiting();
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open('gcj-v1').then((cache) => {
+            return cache.addAll(['index.html', 'manifest.json']);
+        })
+    );
 });
-self.addEventListener('fetch', (e) => {
-    e.respondWith(fetch(e.request));
+
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        fetch(event.request).catch(() => caches.match(event.request))
+    );
 });
