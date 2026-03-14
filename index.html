@@ -5,22 +5,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>GCJ App</title>
+<title>Instalar GCJ App</title>
 
 <link rel="manifest" href="manifest.json">
 
 <meta name="theme-color" content="#7b2cbf">
-
-<script>
-
-if (window.matchMedia('(display-mode: standalone)').matches) {
-
-window.location.href =
-"https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec";
-
-}
-
-</script>
 
 </head>
 
@@ -28,7 +17,27 @@ window.location.href =
 
 <h2>GCJ App</h2>
 
-<p>Instala esta aplicación para acceder rápidamente.</p>
+<p>Instala esta aplicación en tu dispositivo.</p>
+
+<button id="installBtn" style="padding:15px 25px;font-size:18px;">
+Instalar App
+</button>
+
+<script>
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+e.preventDefault();
+deferredPrompt = e;
+document.getElementById('installBtn').style.display='inline-block';
+});
+
+document.getElementById('installBtn').addEventListener('click', () => {
+deferredPrompt.prompt();
+});
+
+</script>
 
 </body>
 </html>
