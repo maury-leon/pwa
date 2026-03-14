@@ -16,7 +16,7 @@
             border: none; 
             border-radius: 10px; 
             cursor: pointer;
-            display: none; /* Se muestra solo si es instalable */
+            display: none; /* Se muestra solo si Chrome lo permite */
         }
     </style>
 </head>
@@ -27,21 +27,29 @@
     <button id="installBtn">Instalar App</button>
 
     <script>
-        // Registrar el Service Worker (Sin esto no hay botón)
+        // Registrar Service Worker inmediatamente
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js').then(() => console.log("SW OK"));
         }
 
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
+            console.log("Evento de instalación detectado");
             e.preventDefault();
             deferredPrompt = e;
+            // Mostrar el botón
             document.getElementById('installBtn').style.display = 'inline-block';
         });
 
         document.getElementById('installBtn').addEventListener('click', () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installBtn').style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
             }
         });
     </script>
