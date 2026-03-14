@@ -1,43 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Instalar GCJ App</title>
-
-<link rel="manifest" href="manifest.json">
-
-<meta name="theme-color" content="#7b2cbf">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GCJ App</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-192.png">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; }
+        #installBanner { 
+            position: fixed; bottom: 0; width: 100%; background: #7b2cbf; 
+            color: white; padding: 20px; text-align: center; display: none; 
+        }
+    </style>
 </head>
+<body>
 
-<body style="font-family:sans-serif;text-align:center;padding:40px;">
+    <iframe src="https://script.google.com/macros/s/TU_ID_DE_SCRIPT/exec"></iframe>
 
-<h2>GCJ App</h2>
+    <div id="installBanner">
+        <p>¿Quieres acceso rápido? Instala la App de la Iglesia</p>
+        <button id="installBtn" style="padding: 10px 20px;">Instalar Ahora</button>
+    </div>
 
-<p>Instala esta aplicación en tu dispositivo.</p>
+    <script>
+        // Registro del Service Worker (Necesario para PWA)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
 
-<button id="installBtn" style="padding:15px 25px;font-size:18px;">
-Instalar App
-</button>
+        let deferredPrompt;
+        const banner = document.getElementById('installBanner');
 
-<script>
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            banner.style.display = 'block'; // Mostrar banner si es instalable
+        });
 
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-e.preventDefault();
-deferredPrompt = e;
-document.getElementById('installBtn').style.display='inline-block';
-});
-
-document.getElementById('installBtn').addEventListener('click', () => {
-deferredPrompt.prompt();
-});
-
-</script>
-
+        document.getElementById('installBtn').addEventListener('click', () => {
+            banner.style.display = 'none';
+            deferredPrompt.prompt();
+        });
+    </script>
 </body>
 </html>
