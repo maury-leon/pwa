@@ -1,8 +1,8 @@
-self.addEventListener('install', (event) => {
+const CACHE_NAME = 'gcj-v1';
+self.addEventListener('install', (e) => {
+    console.log('SW instalado');
     self.skipWaiting();
 });
-
-self.addEventListener('fetch', (event) => {
-    // Esto es lo que Chrome necesita para habilitar el botón de instalar
-    event.respondWith(fetch(event.request));
+self.addEventListener('fetch', (e) => {
+    e.respondWith(fetch(e.request));
 });
