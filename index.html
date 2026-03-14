@@ -4,25 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instalar GCJ App</title>
-    <link rel="manifest" href="manifest.json">
+    
+    <link rel="manifest" href="./manifest.json">
+    
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #fdfdfd; }
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: white; }
         #btnInstalar { 
-            padding: 20px 40px; font-size: 20px; background: #7b2cbf; 
+            padding: 20px 40px; font-size: 22px; background: #7b2cbf; 
             color: white; border: none; border-radius: 50px; 
-            display: none; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: none; cursor: pointer;
         }
     </style>
 </head>
 <body>
     <h2>GCJ App</h2>
-    <p>Preparando instalación...</p>
     <button id="btnInstalar">INSTALAR AHORA</button>
 
     <script>
+        // Registro con ruta explícita
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => {
-                console.log("Service Worker Activo");
+            navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                console.log('SW registrado en el scope:', reg.scope);
+            }).catch(function(err) {
+                console.log('Error al registrar SW:', err);
             });
         }
 
@@ -31,7 +35,6 @@
             e.preventDefault();
             deferredPrompt = e;
             document.getElementById('btnInstalar').style.display = 'inline-block';
-            document.querySelector('p').innerText = 'Haz clic para instalar';
         });
 
         document.getElementById('btnInstalar').addEventListener('click', async () => {
@@ -40,6 +43,7 @@
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
                     document.getElementById('btnInstalar').style.display = 'none';
+                    deferredPrompt = null;
                 }
             }
         });
