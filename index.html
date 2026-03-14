@@ -2,54 +2,47 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instalar GCJ App</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#7b2cbf">
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
-        #installBtn { 
-            padding: 20px 30px; 
-            font-size: 20px; 
-            background-color: #7b2cbf; 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            cursor: pointer;
-            display: none; /* Se muestra solo si Chrome lo permite */
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: white; }
+        #btnInstalar { 
+            padding: 20px 40px; font-size: 22px; background: #7b2cbf; 
+            color: white; border: none; border-radius: 50px; 
+            display: none; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-    <h2>GCJ App</h2>
-    <p>Presiona el botón para instalar el sistema en tu inicio.</p>
-    
-    <button id="installBtn">Instalar App</button>
+    <h2>Sistema GCJ</h2>
+    <p>Haz clic abajo para instalar la aplicación</p>
+    <button id="btnInstalar">INSTALAR APP</button>
 
     <script>
-        // Registrar Service Worker inmediatamente
+        let swRegistration = null;
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => console.log("SW OK"));
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                swRegistration = reg;
+                console.log("Service Worker Activo");
+            });
         }
 
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
-            console.log("Evento de instalación detectado");
             e.preventDefault();
             deferredPrompt = e;
-            // Mostrar el botón
-            document.getElementById('installBtn').style.display = 'inline-block';
+            document.getElementById('btnInstalar').style.display = 'inline-block';
         });
 
-        document.getElementById('installBtn').addEventListener('click', () => {
+        document.getElementById('btnInstalar').addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        document.getElementById('installBtn').style.display = 'none';
-                    }
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('btnInstalar').style.display = 'none';
                     deferredPrompt = null;
-                });
+                }
             }
         });
     </script>
