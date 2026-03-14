@@ -1,59 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalar GCJ App</title>
-    <link rel="manifest" href="manifest.json">
-    <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: white; }
-        #btnInstalar { 
-            padding: 20px 40px; font-size: 22px; background: #7b2cbf; 
-            color: white; border: none; border-radius: 50px; 
-            display: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>GCJ App</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#7b2cbf">
+
+<script>
+
+if (window.matchMedia('(display-mode: standalone)').matches) {
+
+window.location.href =
+"https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec";
+
+}
+
+</script>
+
 </head>
-<body>
-    <h2>Sistema GCJ</h2>
-    <p>Presiona el botón para instalar</p>
-    
-    <button id="btnInstalar">INSTALAR APP</button>
 
-    <script>
-        // Registrar Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log("SW registrado"))
-                .catch(err => console.log("Error SW:", err));
-        }
+<body style="font-family:sans-serif;text-align:center;padding:40px;">
 
-        let deferredPrompt;
-        const btn = document.getElementById('btnInstalar');
+<h2>GCJ App</h2>
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log("Evento beforeinstallprompt capturado");
-            e.preventDefault();
-            deferredPrompt = e;
-            btn.style.display = 'inline-block';
-        });
+<p>Instala esta aplicación para acceder rápidamente.</p>
 
-        btn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    btn.style.display = 'none';
-                    deferredPrompt = null;
-                }
-            }
-        });
-
-        // Ocultar si ya se instaló
-        window.addEventListener('appinstalled', () => {
-            btn.style.display = 'none';
-            console.log('App instalada con éxito');
-        });
-    </script>
 </body>
 </html>
