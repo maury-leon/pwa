@@ -3,6 +3,6 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Necesario para activar la instalación
+    // Esto es lo que Chrome necesita para habilitar el botón de instalar
     event.respondWith(fetch(event.request));
 });
