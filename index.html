@@ -5,11 +5,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Instalar GCJ App</title>
+<title>GCJ App</title>
 
 <link rel="manifest" href="manifest.json">
 
 <meta name="theme-color" content="#7b2cbf">
+
+<script>
+
+if (window.matchMedia('(display-mode: standalone)').matches) {
+
+window.location.href =
+"https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec";
+
+}
+
+</script>
 
 </head>
 
@@ -17,43 +28,7 @@
 
 <h2>GCJ App</h2>
 
-<p>Instala esta aplicación en tu dispositivo.</p>
+<p>Instala esta aplicación para acceder rápidamente.</p>
 
-<button id="installBtn" style="padding:15px 25px;font-size:18px;">
-Instalar App
-</button>
-
-<script>
-
-let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
-
-installBtn.style.display = "none";
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = "inline-block";
-});
-
-installBtn.addEventListener("click", async () => {
-
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-
-  const { outcome } = await deferredPrompt.userChoice;
-
-  if (outcome === "accepted") {
-    console.log("App instalada");
-  } else {
-    console.log("Instalación cancelada");
-  }
-
-  deferredPrompt = null;
-
-});
-
-</script>
 </body>
 </html>
