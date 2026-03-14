@@ -1,0 +1,21 @@
+{
+"name": "Mi App",
+"short_name": "MiApp",
+"start_url": "https://script.google.com/macros/s/TU_SCRIPT_ID/exec",
+"display": "standalone",
+"background_color": "#ffffff",
+"theme_color": "#2d7ff9",
+"orientation": "portrait",
+"icons": [
+{
+"src": "https://TUUSUARIO.github.io/pwa/icon-192.png",
+"sizes": "192x192",
+"type": "image/png"
+},
+{
+"src": "https://TUUSUARIO.github.io/pwa/icon-512.png",
+"sizes": "512x512",
+"type": "image/png"
+}
+]
+}
