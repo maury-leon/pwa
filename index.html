@@ -6,24 +6,22 @@
     <title>Instalar GCJ App</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: white; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #fdfdfd; }
         #btnInstalar { 
-            padding: 20px 40px; font-size: 22px; background: #7b2cbf; 
+            padding: 20px 40px; font-size: 20px; background: #7b2cbf; 
             color: white; border: none; border-radius: 50px; 
             display: none; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-    <h2>Sistema GCJ</h2>
-    <p>Haz clic abajo para instalar la aplicación</p>
-    <button id="btnInstalar">INSTALAR APP</button>
+    <h2>GCJ App</h2>
+    <p>Preparando instalación...</p>
+    <button id="btnInstalar">INSTALAR AHORA</button>
 
     <script>
-        let swRegistration = null;
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(reg => {
-                swRegistration = reg;
+            navigator.serviceWorker.register('sw.js').then(() => {
                 console.log("Service Worker Activo");
             });
         }
@@ -33,6 +31,7 @@
             e.preventDefault();
             deferredPrompt = e;
             document.getElementById('btnInstalar').style.display = 'inline-block';
+            document.querySelector('p').innerText = 'Haz clic para instalar';
         });
 
         document.getElementById('btnInstalar').addEventListener('click', async () => {
@@ -41,7 +40,6 @@
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
                     document.getElementById('btnInstalar').style.display = 'none';
-                    deferredPrompt = null;
                 }
             }
         });
