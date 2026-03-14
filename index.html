@@ -42,43 +42,31 @@ const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPStic
             window.location.href = URL_SCRIPT;
         }
 
-        let eventoInstalacion;
-        const btn = document.getElementById('btnInstalar');
-        const status = document.getElementById('statusText');
-        const guia = document.getElementById('guiaManual');
+       let eventoInstalacion;
+const btn = document.getElementById('btnInstalar');
+const status = document.getElementById('statusText');
 
-        // 2. ESCUCHAR EL EVENTO DE INSTALACIÓN
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            eventoInstalacion = e;
-            btn.style.display = 'inline-block';
-            status.innerText = "¡Listo para instalar!";
-        });
+// Timeout de seguridad: Si en 4 segundos no detecta el evento, muestra ayuda
+const timerSeguridad = setTimeout(() => {
+    if (!eventoInstalacion) {
+        status.innerHTML = "Si no ves el botón, usa el menú del navegador para <br><b>'Instalar aplicación'</b>.";
+    }
+}, 4000);
 
-        btn.addEventListener('click', async () => {
-            if (eventoInstalacion) {
-                eventoInstalacion.prompt();
-                const { outcome } = await eventoInstalacion.userChoice;
-                if (outcome === 'accepted') {
-                    btn.style.display = 'none';
-                    status.innerText = "Instalando...";
-                }
-            }
-        });
+window.addEventListener('beforeinstallprompt', (e) => {
+    clearTimeout(timerSeguridad); // Cancelamos el aviso de error
+    e.preventDefault();
+    eventoInstalacion = e;
+    btn.style.display = 'inline-block';
+    status.innerText = "¡Todo listo para instalar!";
+});
 
-        // 3. REGISTRAR EL SERVICE WORKER
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => {
-                console.log("Service Worker registrado.");
-                // Si en 3 segundos no sale el botón, mostrar guía manual
-                setTimeout(() => {
-                    if (btn.style.display === 'none') {
-                        status.innerText = "Instalación disponible en el menú del navegador";
-                        guia.style.display = 'block';
-                    }
-                }, 3000);
-            });
-        }
+// 3. REGISTRO RÁPIDO DEL SW
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+    .then(() => console.log("SW Activo"))
+    .catch(() => console.log("Error SW"));
+}
     </script>
 </body>
 </html>
