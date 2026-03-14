@@ -1,4 +1,9 @@
-// sw.js - Service Worker básico
+// sw.js - Service Worker compatible con PWA
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+});
+
 self.addEventListener('fetch', (event) => {
-  // Solo sirve para que Chrome detecte que es una PWA
+  // Responde con la petición normal del navegador
+  event.respondWith(fetch(event.request));
 });
