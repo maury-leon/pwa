@@ -1,13 +1,13 @@
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open('gcj-v1').then((cache) => {
-            return cache.addAll(['index.html', 'manifest.json']);
-        })
-    );
+    console.log('SW: Instalado');
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+    console.log('SW: Activado');
 });
 
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        fetch(event.request).catch(() => caches.match(event.request))
-    );
+    // Esto es vital para que el navegador considere la web como instalable
+    event.respondWith(fetch(event.request));
 });
