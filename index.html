@@ -1,73 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCJ App</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#7b2cbf">
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 50px; background-color: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: inline-block; max-width: 90%; }
-        h2 { color: #333; margin-bottom: 10px; }
-        p { color: #666; font-size: 1.1em; }
-        #btnInstalar { 
-            display: none; background-color: #7b2cbf; color: white; 
-            border: none; padding: 15px 40px; font-size: 18px; font-weight: bold;
-            border-radius: 50px; cursor: pointer; margin-top: 25px;
-            box-shadow: 0 4px 15px rgba(123, 44, 191, 0.3);
-            transition: transform 0.2s;
-        }
-        #btnInstalar:active { transform: scale(0.95); }
-        .instrucciones { font-size: 0.9em; color: #999; margin-top: 20px; display: none; }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Instalar GCJ App</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#7b2cbf">
+
 </head>
-<body>
 
-    <div class="card">
-        <h2>GCJ App</h2>
-        <p id="statusText">Detectando sistema...</p>
-        <button id="btnInstalar">INSTALAR AHORA</button>
-        <div id="guiaManual" class="instrucciones">
-            Si no ves el botón, toca los tres puntos del navegador y selecciona <b>"Instalar aplicación"</b> o <b>"Agregar a la pantalla principal"</b>.
-        </div>
-    </div>
+<body style="font-family:sans-serif;text-align:center;padding:40px;">
 
-    <script>
-       // Cambia la URL original por esta que incluye el parámetro de usuario /u/0/
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/u/0/exec";
+<h2>GCJ App</h2>
 
-        // 1. SI YA ESTÁ INSTALADA O ES PC EN MODO APP: Redirigir
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            window.location.href = URL_SCRIPT;
-        }
+<p>Instala esta aplicación en tu dispositivo.</p>
 
-       let eventoInstalacion;
-const btn = document.getElementById('btnInstalar');
-const status = document.getElementById('statusText');
+<button id="installBtn" style="padding:15px 25px;font-size:18px;">
+Instalar App
+</button>
 
-// Timeout de seguridad: Si en 4 segundos no detecta el evento, muestra ayuda
-const timerSeguridad = setTimeout(() => {
-    if (!eventoInstalacion) {
-        status.innerHTML = "Si no ves el botón, usa el menú del navegador para <br><b>'Instalar aplicación'</b>.";
-    }
-}, 4000);
+<script>
+
+let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    clearTimeout(timerSeguridad); // Cancelamos el aviso de error
-    e.preventDefault();
-    eventoInstalacion = e;
-    btn.style.display = 'inline-block';
-    status.innerText = "¡Todo listo para instalar!";
+e.preventDefault();
+deferredPrompt = e;
+document.getElementById('installBtn').style.display='inline-block';
 });
 
-// 3. REGISTRO RÁPIDO DEL SW
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-    .then(() => console.log("SW Activo"))
-    .catch(() => console.log("Error SW"));
-}
-    </script>
+document.getElementById('installBtn').addEventListener('click', () => {
+deferredPrompt.prompt();
+});
+
+</script>
+
 </body>
 </html>
- 
