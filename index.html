@@ -1,34 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>GCJ App</title>
-
-<link rel="manifest" href="manifest.json">
-
-<meta name="theme-color" content="#7b2cbf">
-
-<script>
-
-if (window.matchMedia('(display-mode: standalone)').matches) {
-
-window.location.href =
-"https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec";
-
-}
-
-</script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCJ App</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7b2cbf">
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f9; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; }
+        #btnInstalar { 
+            display: none; background-color: #7b2cbf; color: white; 
+            border: none; padding: 15px 30px; font-size: 16px; 
+            border-radius: 8px; cursor: pointer; margin-top: 20px;
+        }
+    </style>
 </head>
+<body>
 
-<body style="font-family:sans-serif;text-align:center;padding:40px;">
+    <div class="card">
+        <h2>GCJ App</h2>
+        <p id="statusText">Verificando aplicación...</p>
+        <button id="btnInstalar">Instalar Aplicación</button>
+    </div>
 
-<h2>GCJ App</h2>
+    <script>
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxP0x6-WXeRylXrPSticPG3PeReRuant24xxON76RwBDjb4UgID5fGcfNOz0us1hG9iYA/exec";
 
-<p>Instala esta aplicación para acceder rápidamente.</p>
+        // 1. SI YA ESTÁ INSTALADA: Redirigir al script
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            window.location.href = URL_SCRIPT;
+        }
 
+        // 2. LÓGICA DE INSTALACIÓN
+        let eventoInstalacion;
+        const btn = document.getElementById('btnInstalar');
+        const status = document.getElementById('statusText');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            eventoInstalacion = e;
+            btn.style.display = 'block';
+            status.innerText = "Haz clic abajo para instalar la app en tu inicio.";
+        });
+
+        btn.addEventListener('click', async () => {
+            if (eventoInstalacion) {
+                eventoInstalacion.prompt();
+                const { outcome } = await eventoInstalacion.userChoice;
+                if (outcome === 'accepted') {
+                    btn.style.display = 'none';
+                }
+            }
+        });
+
+        // 3. REGISTRAR SERVICE WORKER (Obligatorio para que sea PWA)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            .catch(err => console.log("Fallo registro SW", err));
+        }
+    </script>
 </body>
 </html>
