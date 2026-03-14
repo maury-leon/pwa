@@ -26,18 +26,34 @@ Instalar App
 <script>
 
 let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
 
-window.addEventListener('beforeinstallprompt', (e) => {
-e.preventDefault();
-deferredPrompt = e;
-document.getElementById('installBtn').style.display='inline-block';
+installBtn.style.display = "none";
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "inline-block";
 });
 
-document.getElementById('installBtn').addEventListener('click', () => {
-deferredPrompt.prompt();
+installBtn.addEventListener("click", async () => {
+
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if (outcome === "accepted") {
+    console.log("App instalada");
+  } else {
+    console.log("Instalación cancelada");
+  }
+
+  deferredPrompt = null;
+
 });
 
 </script>
-
 </body>
 </html>
